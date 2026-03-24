@@ -1,0 +1,125 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f1f5f9; /* Phông nền xám nhạt */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-card {
+    background: white;
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    border-radius: 16px; /* Bo góc khung */
+    text-align: center;
+}
+
+.icon-box {
+    background: #eff6ff;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 20px;  /*căn giữa: top, right+left, bottom*/ 
+}
+
+.icon-box i {
+    color: #3b82f6;
+    font-size: 24px;
+}
+
+h2 {
+    color: #1e293b;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-transform: uppercase; /* Chữ in hoa tiêu đề */
+}
+
+p.subtitle {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    color: #475569;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-wrapper i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%); /* dịch phần tử lên trên 50% chiều cao của chính nó*/
+    color: #94a3b8;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 12px 15px 12px 45px; /*top right bottom left*/
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    outline: none; /*bỏ viền mặc định focus outline để có thể đổi màu viền*/
+    /* transition: border-color 0.3s; */
+}
+
+.input-wrapper input:focus {
+    border-color: #3b82f6;
+}
+
+/* .forgot-pass {
+    float: right;
+    color: #3b82f6;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+} */
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px; /*là khoảng cách giữa các phần tử con bên trong container đang dùng display: flex (hoặc grid).*/
+    margin-bottom: 30px;
+    color: #64748b;
+    font-size: 14px;
+    /* clear: both; */
+}
+
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    background-color: #3b82f6; /* Màu xanh chủ đạo */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.btn-login:hover {
+    background-color: #2563eb;
+}

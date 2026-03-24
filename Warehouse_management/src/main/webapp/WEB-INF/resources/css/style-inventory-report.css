@@ -1,0 +1,100 @@
+
+/* MAIN CONTENT */
+.main-content { 
+    flex: 1; 
+    padding: 40px; 
+    overflow-y: auto; 
+}
+
+.page-header {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--text-main);
+    margin-bottom: 30px;
+}
+
+/* SEARCH & FILTER BAR */
+.toolbar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+}
+
+.search-box i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 10px 15px 10px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+}
+
+/* DATA TABLE CARD */
+.data-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+}
+
+/* table { 
+    width: 100%; 
+    border-collapse: collapse; 
+}
+
+th {
+    text-align: left;
+    padding: 10px 12px;
+    background-color: #F1F5F9;
+    color: #64748b;
+    font-size: 13px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border-color);
+}
+
+td { 
+    padding: 10px 12px; 
+    border-bottom: 1px solid #f1f5f9; 
+    color: #334155; 
+    font-size: 13px; 
+} */
+
+/* STOCK STATUS STYLES */
+.stock-value { 
+    font-weight: bold; 
+    font-size: 15px; 
+}
+.status-low { 
+    color: var(--danger-red); 
+} /* Cảnh báo sắp hết hàng */
+.status-ok { 
+    color: var(--success-green); 
+} /* Tồn kho ổn định */
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.badge-danger { 
+    background: #fee2e2; 
+    color: #991b1b; 
+}
+
+.badge-success { 
+    background: #dcfce7; 
+    color: #166534; 
+}

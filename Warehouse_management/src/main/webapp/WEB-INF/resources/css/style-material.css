@@ -1,0 +1,101 @@
+
+/* MAIN CONTENT */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.page-header {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--text-main);
+    margin-bottom: 30px;
+}
+
+/* DATA CARD */
+.data-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+}
+
+/* TOOLBAR (Search & Filter) */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    gap: 15px;
+    width:100%;
+}
+
+.left-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-add {
+    background-color: var(--accent-blue);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    /* cursor: pointer; */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.btn-add:hover { 
+    background-color: #2563eb; 
+}
+
+.filter-select {
+    padding: 10px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+    color: var(--text-gray);
+    background-color: white;
+}
+
+.search-box {
+    position: relative;
+    width: 300px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 10px 15px 10px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+}
+
+.search-box i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-gray);
+}
+
+/* Table bên file style.css*/
+
+
+.action-links a {
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    margin-right: 15px;
+}
+
+.edit-link { color: var(--accent-blue); }
+.delete-link { color: #ef4444; }
+
+.action-links a:hover { 
+    text-decoration: underline; 
+}

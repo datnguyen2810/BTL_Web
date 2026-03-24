@@ -1,0 +1,85 @@
+@Query(value = "SELECT * FROM users WHERE status = 'ACTIVE'", nativeQuery = true)
+List<User> findActiveUsers();
+
+@Query("SELECT u FROM User u WHERE u.name = :name")
+User findByName(@Param("name") String name);
+
+// @Modifying: Khi thực hiện câu lệnh UPDATE hoặc DELETE, cần thêm @Modifying kèm theo @Transactional.
+@Modifying
+@Transactional
+@Query("UPDATE User u SET u.status = 'INACTIVE' WHERE u.id = ?1")
+void deactivateUser(Long id);
+
+--------------------------------------------------------------------------------------------------------
+* Phân trang: quản lý vật tư
+// Repository:
+@Query("""
+    SELECT m
+    FROM Material m
+    WHERE (:categoryId IS NULL OR m.category.id = :categoryId)
+      AND (
+            :keyword IS NULL
+            OR LOWER(m.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
+            OR CAST(m.id AS string) LIKE CONCAT('%', :keyword, '%')
+          )
+""")
+Page<Material> searchMaterials(@Param("categoryId") Long categoryId,
+                               @Param("keyword") String keyword,
+                               Pageable pageable);
+
+
+// Service:
+public Page<Material> search(Long categoryId, String keyword, Pageable pageable) {
+    if (keyword != null && keyword.trim().isEmpty()) {
+        keyword = null;
+    }
+    return materialRepository.searchMaterials(categoryId, keyword, pageable);
+}
+
+
+// Controller:
+@GetMapping("/admin/materials")
+public String getMaterials(
+        @RequestParam(name = "categoryId", required = false) Long categoryId,
+        @RequestParam(name = "keyword", required = false) String keyword,
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        Model model) {
+
+    Page<Material> materialPage = materialService.search(
+            categoryId, keyword, PageRequest.of(page, 5));
+
+    model.addAttribute("materials", materialPage.getContent());
+    model.addAttribute("currentPage", page);
+    model.addAttribute("totalPages", materialPage.getTotalPages());
+    model.addAttribute("categories", categoryService.handleGetAllCategories());
+    model.addAttribute("selectedCategoryId", categoryId);
+    model.addAttribute("keyword", keyword);
+
+    return "admin/material/show-material";
+}
+
+
+
+* Session 
+Session trong Java (đặc biệt là Servlet/JSP) là một cơ chế phía máy chủ (server-side) dùng để theo dõi trạng thái người dùng. 
+Nó lưu trữ thông tin tạm thời (như giỏ hàng, thông tin đăng nhập) trên server thông qua HttpSession, 
+giúp website ghi nhớ người dùng qua các yêu cầu (request) khác nhau. 
+
+- Các đặc điểm chính của Session trong Java Web:
+ + Lưu trữ phía máy chủ: Khác với Cookie lưu trên trình duyệt, dữ liệu session được giữ an toàn trên server, thường trong bộ nhớ RAM hoặc cơ sở dữ liệu.
+ + HttpSession Interface: Servlet API cung cấp javax.servlet.http.HttpSession để tạo, quản lý, thêm, và xóa dữ liệu session.
+ + Session ID: Server gửi một ID duy nhất (JSESSIONID) xuống trình duyệt thông qua Cookie hoặc URL để nhận diện người dùng trong các lần truy cập sau.
+ + Vòng đời: Session bắt đầu khi người dùng truy cập và kết thúc khi hết hạn (timeout), người dùng đăng xuất, hoặc đóng trình duyệt (nếu cookie session đóng). 
+
+- Các thao tác cơ bản với Session (Servlet/JSP):
+ + Tạo/Lấy Session: HttpSession session = request.getSession();
+ + Lưu dữ liệu: session.setAttribute("key", value);
+ + Lấy dữ liệu: Object value = session.getAttribute("key");
+ + Xóa dữ liệu: session.removeAttribute("key");
+ + Hủy Session: session.invalidate();\
+ 
+- Tại sao cần Session?
+ HTTP là giao thức không trạng thái (stateless), nghĩa là mỗi request là độc lập. Session cho phép xây dựng các tính năng cần ghi nhớ như:
+ + Đăng nhập/Đăng xuất (Login session).
+ + Giỏ hàng (Shopping cart).
+ + Quản lý quyền truy cập (Authorization).

@@ -1,0 +1,151 @@
+
+
+/* MAIN CONTENT */
+.main-content { 
+    flex: 1; 
+    padding: 30px;
+    overflow-y: auto; 
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.page-header h1 { 
+    font-size: 24px; 
+    color: var(--text-main); 
+}
+
+.date-input { 
+    padding: 8px; 
+    border: 1px solid var(--border-color); 
+    border-radius: 6px; 
+}
+
+/* GRID LAYOUT */
+.import-container { 
+    display: grid; 
+    grid-template-columns: 350px 1fr; /*2 cột 1 cột 350px, 1 cột là phần còn lại*/
+    gap: 25px; 
+}
+
+.card { 
+    background: white; 
+    padding: 25px; 
+    border-radius: 12px; 
+}
+
+.card h3 {
+    font-size: 16px; 
+    margin-bottom: 20px; 
+    color: #1e293b; 
+}
+
+/* FORM NHẬP */
+.form-group { 
+    margin-bottom: 15px; 
+}
+
+.form-group label { 
+    display: block; 
+    font-size: 13px; 
+    font-weight: 600; 
+    color: #64748b; 
+    margin-bottom: 3px; 
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.btn-add-temp {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--accent-blue);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    /* cursor: pointer; */
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.btn-add-temp:hover { 
+    background-color: #2563eb; 
+}
+
+/* Style cho nút xóa trong bảng chi tiết */
+.btn-delete-item {
+    border: none;
+    color: #ef4444; /* Màu đỏ cảnh báo */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+}
+
+.btn-delete-item:hover {
+    background-color: #fee2e2; /* Nền đỏ nhạt khi hover */
+    transform: scale(1.1);
+}
+
+
+/* TABLE CHI TIẾT */
+.table-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 15px; 
+}
+
+.total-preview { 
+    color: var(--accent-blue); 
+    font-weight: bold; 
+    font-size: 18px; 
+}
+
+/* table { 
+    width: 100%; 
+    border-collapse: collapse; 
+}
+
+th { 
+    text-align: center; 
+    padding: 10px 12px; 
+    background: #F1F5F9; 
+    color: var(--text-gray); 
+    font-size: 13px; 
+    text-transform: uppercase; 
+    border-bottom: 1px solid var(--border-color);
+}
+
+td { 
+    padding: 10px 12px; 
+    border-bottom: 1px solid #f1f5f9; 
+    color: #334155; 
+    font-size: 13px; 
+    text-align: center;
+} */
+
+.btn-submit-all {
+    float: right;
+    padding: 12px 30px;
+    background-color: var(--accent-green);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-top: 20px;
+    transition: 0.3s;
+    /* cursor: pointer; */
+}
+
+.btn-submit-all:hover { 
+    background-color: #059669; 
+}

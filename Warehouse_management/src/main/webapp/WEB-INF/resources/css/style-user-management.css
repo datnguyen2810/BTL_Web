@@ -1,0 +1,95 @@
+
+/* MAIN CONTENT STYLING */
+.main-content { 
+    flex: 1; 
+    padding: 40px; 
+    overflow-y: auto; 
+}
+
+.page-header { 
+    font-size: 24px; 
+    font-weight: bold; 
+    color: var(--text-main); 
+    margin-bottom: 30px; 
+}
+
+/* DATA CARD STYLING */
+.data-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+}
+
+.btn-add-user {
+    background-color: var(--accent-green);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    /* cursor: pointer; */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 25px;
+    transition: 0.3s;
+}
+
+.btn-add-user:hover { 
+    background-color: #059669; 
+    transform: translateY(-1px);
+}
+
+/* TABLE STYLING */
+/* table { 
+    width: 100%; 
+    border-collapse: collapse; 
+}
+
+th {
+    text-align: left;
+    padding: 10px 12px;
+    background-color: #F1F5F9;
+    color: var(--text-gray);
+    font-size: 13px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border-color);
+}
+
+td { 
+    padding: 10px 12px; 
+    border-bottom: 1px solid #f1f5f9; 
+    color: #334155; 
+    font-size: 13px; 
+} */
+
+/* ROLE BADGES */
+.badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.badge-admin {  /* Badge Admin màu xanh */
+    background-color: #dbeafe; 
+    color: #1e40af; 
+} 
+
+.badge-user {  /* Badge User màu xám */
+    background-color: #f1f5f9; 
+    color: #475569; 
+}  
+
+/* ACTION LINKS */
+.action-links a { 
+    text-decoration: none; 
+    font-size: 13px; 
+    font-weight: 600;
+    margin-right: 15px; 
+}
+
+.edit-link { color: var(--accent-blue); }
+.delete-link { color: #ef4444; }
+
+.action-links a:hover { text-decoration: underline; }
