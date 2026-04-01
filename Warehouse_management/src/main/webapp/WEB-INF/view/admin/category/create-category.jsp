@@ -127,7 +127,7 @@ uri="http://www.springframework.org/tags/form" %>
         <form action="/admin/categories/create" method="POST" modelAttribute="newCategory">
             <div class="form-group">
                 <label for="cat_name">Tên danh mục</label>
-                <input type="text" id="cat_name" name="name" placeholder="Ví dụ: Thiết bị điện tử..." required path="name">
+                <input type="text" id="cat_name" name="name" placeholder="Ví dụ: Thiết bị điện tử..." required>
             </div>
 
             <div class="form-group">

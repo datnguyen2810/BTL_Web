@@ -1,13 +1,16 @@
 package vn.xuandat.Warehouse_management.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import vn.xuandat.Warehouse_management.entity.Category;
 import vn.xuandat.Warehouse_management.service.CategoryService;
@@ -21,15 +24,31 @@ public class CategoryController {
     }
     
     @GetMapping("/admin/categories")
-    public String getAllCategories(Model model){
-        List<Category> categories = this.categoryService.handleGetAllCategories();
-        model.addAttribute("categories", categories);
+    public String getCategoriesPage(Model model, 
+                                    @RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(required = false) String keyword) {
+        int pageSize = 5;
+        // page: chỉ số bắt đầu từ 0, pageSize: số dòng trên mỗi trang
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Category> categoryPage = categoryService.getPagedCategories(keyword, pageable);
+        if (page < 0 || page >= categoryPage.getTotalPages() && categoryPage.getTotalPages() > 0) {
+            return "redirect:/admin/categories?page=0";      
+        }
+
+        model.addAttribute("categories", categoryPage.getContent());
+        model.addAttribute("currentPage", page); 
+        model.addAttribute("totalPages", categoryPage.getTotalPages());
         return "admin/category/show-categories";
     }
 
     @GetMapping("/admin/categories/delete/{id}")
-    public String deleteCategory(@PathVariable Long id) {
-        this.categoryService.handleDeleteCategoryById(id);
+    public String deleteCategory(@PathVariable Long id, RedirectAttributes ra) {
+        try {
+            this.categoryService.handleDeleteCategoryById(id);
+            ra.addFlashAttribute("message", "Xóa danh mục thành công!");
+        } catch (RuntimeException e) {
+            ra.addFlashAttribute("error", e.getMessage());
+        }
         return "redirect:/admin/categories";
     }
 

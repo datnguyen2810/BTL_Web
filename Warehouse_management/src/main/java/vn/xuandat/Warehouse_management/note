@@ -83,3 +83,15 @@ giúp website ghi nhớ người dùng qua các yêu cầu (request) khác nhau.
  + Đăng nhập/Đăng xuất (Login session).
  + Giỏ hàng (Shopping cart).
  + Quản lý quyền truy cập (Authorization).
+
+
+ * So sánh Page và List
+- Khi dùng Pageable, Repository sẽ trả về một đối tượng Page<T> thay vì List<T>. Đối tượng Page này rất "thông minh", nó chứa:
+    + getContent(): Danh sách dữ liệu của trang hiện tại (giống như List).
+    + getTotalElements(): Tổng số bản ghi trong Database.
+    + getTotalPages(): Tổng số trang có thể chia được.
+    + getNumber(): Trang hiện tại đang đứng.
+    + hasNext() / hasPrevious(): Có trang tiếp theo hoặc trang trước đó không.
+
+
+    

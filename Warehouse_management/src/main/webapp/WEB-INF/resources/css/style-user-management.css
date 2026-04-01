@@ -31,7 +31,6 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 25px;
     transition: 0.3s;
 }
 

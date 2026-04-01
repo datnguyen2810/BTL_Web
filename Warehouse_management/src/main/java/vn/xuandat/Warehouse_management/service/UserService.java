@@ -1,8 +1,13 @@
 package vn.xuandat.Warehouse_management.service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import vn.xuandat.Warehouse_management.entity.User;
@@ -14,9 +19,15 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+    public List<User> handleGetAllUsers() {
+        return this.userRepository.findAll();
+    }
 
-    public ArrayList<User> handleGetAllUsers() {
-        return (ArrayList<User>) this.userRepository.findAll();
+    public Page<User> getPagedUsers(String keyword, Pageable pageable) {
+        if(keyword != null && keyword.trim().isEmpty()) {
+            keyword = null;
+        }
+        return this.userRepository.getPagedUsers(keyword, pageable);
     }
 
     public void handleSaveUser(User user) {
@@ -24,7 +35,7 @@ public class UserService {
     }
 
     public void handleDeleteUser(Long id){
-        this.userRepository.deleteById(id);
+        this.userRepository.handleDeleteUser(id);
     }
 
     public User fetchUserById(Long id) {
@@ -38,6 +49,12 @@ public class UserService {
 
     public User getUserByEmail(String email) {
         return this.userRepository.findByEmail(email);
+    }
+
+    public User getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        return userRepository.findByEmail(email);
     }
 
     

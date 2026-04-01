@@ -2,6 +2,8 @@ package vn.xuandat.Warehouse_management.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +15,8 @@ import vn.xuandat.Warehouse_management.entity.Material;
 @Repository
 public interface MaterialRepository extends JpaRepository<Material, Long> {
     List<Material> findByCategoryId(Long categoryId);
+    long countByCategoryId(Long id);
+
     @Query("""
             select m 
             from Material m
@@ -21,14 +25,16 @@ public interface MaterialRepository extends JpaRepository<Material, Long> {
                 :keyword is null 
                 or lower(m.name) like lower(concat('%', :keyword, '%')))
             """)
-    List<Material> searchMaterials(@Param("categoryId") Long categoryId, 
-                                  @Param("keyword") String keyword);
+    Page<Material> getPagedMaterials(@Param("categoryId") Long categoryId, 
+                                  @Param("keyword") String keyword,
+                                  Pageable pageable);
+
 
     @Query("""
         select (
-            select coalesce(sum(id.import_quantity), 0)
-            from ImportDetail id 
-            where id.material.id = :materialId
+            (select coalesce(sum(id.import_quantity), 0)
+             from ImportDetail id 
+             where id.material.id = :materialId)
             - 
             (select coalesce(sum(ed.export_quantity), 0)
              from ExportDetail ed
@@ -47,11 +53,9 @@ public interface MaterialRepository extends JpaRepository<Material, Long> {
         where (select count(id) from ImportDetail id where id.material.id = m.id) > 0
         and (:categoryId is null or m.category.id = :categoryId)
         and (:keyword is null 
-            or lower(m.name) like lower(concat('%', :keyword, '%')) 
-            or cast(m.id as string) like lower(concat('%', :keyword, '%')))
+            or lower(m.name) like lower(concat('%', :keyword, '%')))
     """)
-
-    List<InventoryDTO> getInventoryReport(@Param("keyword") String keyword, @Param("categoryId") Long categoryId);
+    Page<InventoryDTO> getPagedInventoryReport(@Param("keyword") String keyword, @Param("categoryId") Long categoryId, Pageable pageable);
     
     @Query("""
             select count(*)
@@ -61,4 +65,7 @@ public interface MaterialRepository extends JpaRepository<Material, Long> {
             - (select coalesce(sum(ed.export_quantity), 0) from ExportDetail ed where ed.material.id = m.id) < 10
             """)
     long countLowStockMaterials();
+
+
+
 }

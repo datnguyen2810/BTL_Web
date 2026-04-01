@@ -18,7 +18,7 @@ public class ExportDetail {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    private int export_quantity;
+    private Long export_quantity;
     private double export_price;
 
     @ManyToOne

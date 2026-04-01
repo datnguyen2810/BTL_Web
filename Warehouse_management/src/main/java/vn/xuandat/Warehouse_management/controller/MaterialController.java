@@ -2,6 +2,9 @@ package vn.xuandat.Warehouse_management.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import vn.xuandat.Warehouse_management.entity.Category;
 import vn.xuandat.Warehouse_management.entity.Material;
@@ -24,37 +28,29 @@ public class MaterialController {
         this.materialService = materialService;
         this.categoryService = categoryService;
     }
-
-    // @InitBinder
-    // public void initBinder(WebDataBinder binder) {
-    //     binder.registerCustomEditor(Category.class, new PropertyEditorSupport() {
-    //         @Override
-    //         public void setAsText(String text) {
-    //             if (text == null || text.isEmpty()) {
-    //                 setValue(null);
-    //             } else {
-    //                 setValue(categoryService.findCategoryById(Long.valueOf(text)));
-    //             }
-    //         }
-    //     });
-    // }
-
-    // @GetMapping("/admin/materials")
-    // public String getAllMaterials(Model model){
-    //     List<Material> materials = this.materialService.handleGetAllMaterials();
-    //     model.addAttribute("materials", materials);
-    //     return "admin/material/show-material";
-    // }
-
-    // xử lý phần lọc 
+    
     @GetMapping("/admin/materials")
-    public String getMaterials(@RequestParam(name="categoryId", required = false) Long categoryId, 
-                    @RequestParam(name="keyword", required = false) String keyword, Model model){
-        List<Material> materials = this.materialService.searchMaterials(categoryId, keyword);
-        model.addAttribute("materials", materials);
+    public String getMaterials(
+        @RequestParam(name="categoryId", required = false) Long categoryId, 
+        @RequestParam(name="keyword", required = false) String keyword,
+        @RequestParam(name="page", defaultValue = "0") int page,
+        Model model) {
+    
+        int pageSize = 5; // Số bản ghi mỗi trang
+        Pageable pageable = PageRequest.of(page, pageSize); // chỉ truy vấn đúng số bản ghi cần thiết cho trang hiện tại
+        
+        // Gọi Service trả về Page thay vì List
+        Page<Material> materialPage = this.materialService.getPagedMaterials(categoryId, keyword, pageable);
+        if (page < 0 || page >= materialPage.getTotalPages() && materialPage.getTotalPages() > 0) {
+            return "redirect:/admin/materials?page=0";      
+        }
+        
+        model.addAttribute("materials", materialPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", materialPage.getTotalPages());
+        
         model.addAttribute("categories", this.categoryService.handleGetAllCategories());
-        model.addAttribute("selectedCategoryId", categoryId);
-        // model.addAttribute("keyword", keyword);
+        model.addAttribute("selectedCategoryId", categoryId);      
         return "admin/material/show-materials";
     }
 
@@ -89,8 +85,14 @@ public class MaterialController {
     }
 
     @GetMapping("/admin/materials/delete/{id}")
-    public String deleteMaterial(@PathVariable Long id) {
-        this.materialService.handleDeleteMaterialById(id);
+    public String deleteMaterial(@PathVariable Long id, RedirectAttributes ra) {
+        try {
+            this.materialService.handleDeleteMaterialById(id);
+            ra.addFlashAttribute("message", "Xóa nguyên vật liệu thành công!");
+        } catch (RuntimeException e) {
+            ra.addFlashAttribute("error", e.getMessage());
+        }
+
         return "redirect:/admin/materials";
     }
 

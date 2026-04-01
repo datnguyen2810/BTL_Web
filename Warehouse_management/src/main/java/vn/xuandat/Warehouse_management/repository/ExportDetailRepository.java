@@ -17,5 +17,7 @@ public interface  ExportDetailRepository extends JpaRepository<ExportDetail, Obj
             where d.exportEntity.id = :exportId
             """)
     void deleteByExportId(@Param("exportId") Long exportId);
+
+    boolean existsByMaterialId(Long id);
     
 }

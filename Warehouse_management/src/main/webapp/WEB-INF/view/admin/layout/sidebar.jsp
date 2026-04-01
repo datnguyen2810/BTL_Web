@@ -2,13 +2,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="sidebar">
     <div class="sidebar-header">Quản lý kho vật tư</div>
-    <a href="/admin/dashboard" class="nav-item ${currentPage == 'dashboard' ? 'active' : ''}"><i class="fas fa-chart-line"></i> Dashboard</a>
-    <a href="/admin/categories" class="nav-item ${currentPage == 'categories' ? 'active' : ''}"><i class="fas fa-list"></i> Danh mục</a>
-    <a href="/admin/materials" class="nav-item ${currentPage == 'materials' ? 'active' : ''}"><i class="fas fa-box"></i> Vật tư</a>
-    <a href="/admin/imports" class="nav-item ${currentPage == 'imports' ? 'active' : ''}"><i class="fas fa-file-import"></i> Nhập kho</a>
-    <a href="/admin/exports" class="nav-item ${currentPage == 'exports' ? 'active' : ''}"><i class="fas fa-file-export"></i> Xuất kho</a>
-    <a href="/admin/inventory-report" class="nav-item ${currentPage == 'inventory-report' ? 'active' : ''}"><i class="fas fa-warehouse"></i> Báo cáo tồn kho</a>
-    <a href="/admin/users" class="nav-item ${currentPage == 'users' ? 'active' : ''}"><i class="fas fa-users-cog"></i> Quản lý người dùng</a>
+    <a href="/admin/dashboard" class="nav-item ${activeMenu == 'dashboard' ? 'active' : ''}"><i class="fas fa-chart-line"></i> Dashboard</a>
+    <a href="/admin/categories" class="nav-item ${activeMenu == 'categories' ? 'active' : ''}"><i class="fas fa-list"></i> Danh mục</a>
+    <a href="/admin/materials" class="nav-item ${activeMenu == 'materials' ? 'active' : ''}"><i class="fas fa-box"></i> Vật tư</a>
+    <a href="/admin/imports" class="nav-item ${activeMenu == 'imports' ? 'active' : ''}"><i class="fas fa-file-import"></i> Nhập kho</a>
+    <a href="/admin/exports" class="nav-item ${activeMenu == 'exports' ? 'active' : ''}"><i class="fas fa-file-export"></i> Xuất kho</a>
+    <a href="/admin/inventory-report" class="nav-item ${activeMenu == 'inventory-report' ? 'active' : ''}"><i class="fas fa-warehouse"></i> Báo cáo tồn kho</a>
+    <a href="/admin/users" class="nav-item ${activeMenu == 'users' ? 'active' : ''}"><i class="fas fa-users-cog"></i> Quản lý người dùng</a>
     <a href="/logout" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
 </div> -->
 
@@ -35,32 +35,32 @@
         </div>
     </div>
 
-    <a href="/admin/dashboard" class="nav-item ${currentPage == 'dashboard' ? 'active' : ''}">
+    <a href="/admin/dashboard" class="nav-item ${activeMenu == 'dashboard' ? 'active' : ''}">
         <i class="fas fa-chart-line"></i> Dashboard
     </a>
 
-    <a href="/admin/categories" class="nav-item ${currentPage == 'categories' ? 'active' : ''}">
+    <a href="/admin/categories" class="nav-item ${activeMenu == 'categories' ? 'active' : ''}">
         <i class="fas fa-list"></i> Danh mục
     </a>
 
-    <a href="/admin/materials" class="nav-item ${currentPage == 'materials' ? 'active' : ''}">
+    <a href="/admin/materials" class="nav-item ${activeMenu == 'materials' ? 'active' : ''}">
         <i class="fas fa-box"></i> Vật tư
     </a>
 
-    <a href="/admin/imports" class="nav-item ${currentPage == 'imports' ? 'active' : ''}">
+    <a href="/admin/imports" class="nav-item ${activeMenu == 'imports' ? 'active' : ''}">
         <i class="fas fa-file-import"></i> Nhập kho
     </a>
 
-    <a href="/admin/exports" class="nav-item ${currentPage == 'exports' ? 'active' : ''}">
+    <a href="/admin/exports" class="nav-item ${activeMenu == 'exports' ? 'active' : ''}">
         <i class="fas fa-file-export"></i> Xuất kho
     </a>
 
-    <a href="/admin/inventory-report" class="nav-item ${currentPage == 'inventory-report' ? 'active' : ''}">
+    <a href="/admin/inventory-report" class="nav-item ${activeMenu == 'inventory-report' ? 'active' : ''}">
         <i class="fas fa-warehouse"></i> Báo cáo tồn kho
     </a>
 
     <sec:authorize access="hasRole('ADMIN')">
-        <a href="/admin/users" class="nav-item ${currentPage == 'users' ? 'active' : ''}">
+        <a href="/admin/users" class="nav-item ${activeMenu == 'users' ? 'active' : ''}">
             <i class="fas fa-users-cog"></i> Quản lý người dùng
         </a>
     </sec:authorize>

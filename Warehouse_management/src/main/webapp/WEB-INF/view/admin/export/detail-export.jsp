@@ -18,57 +18,67 @@
         table { width: 100%; border-collapse: collapse; }
         th { background: #f8fafc; padding: 12px; text-align: center; border-bottom: 2px solid #e2e8f0; }
         td { padding: 12px; border-bottom: 1px solid #edf2f7; }
+        .details-responsive {
+            max-height: 300px;    /* Chiều cao tối đa bạn muốn */
+            overflow-y: auto;    /* Hiện thanh cuộn dọc khi dữ liệu vượt quá 400px */
+        }
+        /* Giữ tiêu đề bảng cố định khi cuộn xuống (Sticky Header) */
+        .details-responsive table thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
         .total-amount { text-align: right; margin-top: 20px; font-size: 1.2em; font-weight: bold; color: #38a169; }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <div class="header">
-        <h2>Phiếu xuất kho #${exportTicket.id}</h2>
-        <a href="/admin/exports" class="btn-back" style="text-decoration: none; color: #64748b;">
-            <i class="fas fa-arrow-left"></i> Quay lại
-        </a>
-    </div>
-
-    <div class="info-section">
-        <div class="info-box">
-            <p>Người thực hiện: <b>${not empty exportTicket.userExport ? exportTicket.userExport.fullName : 'Hệ thống'}</b></p>
-            <p>Mã nhân viên: <b>${exportTicket.userExport.id}</b></p>
+    <div class="container">
+        <div class="header">
+            <h2>Phiếu xuất kho #${exportTicket.id}</h2>
+            <a href="/admin/exports" class="btn-back" style="text-decoration: none; color: #64748b;">
+                <i class="fas fa-arrow-left"></i> Quay lại
+            </a>
         </div>
-        <div class="info-box" style="text-align: right;">
-            <p>Ngày xuất: <b>${exportTicket.date}</b></p>
-            <!-- <p>Trạng thái: <b style="color: #38a169;">Hoàn thành</b></p> -->
+
+        <div class="info-section">
+            <div class="info-box">
+                <p>Người thực hiện: <b>${not empty exportTicket.userExport ? exportTicket.userExport.fullName : 'Hệ thống'}</b></p>
+                <p>Mã nhân viên: <b>${exportTicket.userExport.id}</b></p>
+            </div>
+            <div class="info-box" style="text-align: right;">
+                <p>Ngày xuất: <b>${exportTicket.date}</b></p>
+                <!-- <p>Trạng thái: <b style="color: #38a169;">Hoàn thành</b></p> -->
+            </div>
+        </div>
+        <div class="details-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã vật tư</th>
+                        <th>Tên vật tư</th>
+                        <th>Số lượng xuất</th>
+                        <th>Đơn giá xuất</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="dt" items="${details}">
+                        <tr>
+                            <td>${dt.material.id}</td>
+                            <td>${dt.material.name}</td>
+                            <td>${dt.export_quantity}</td>
+                            <td><fmt:formatNumber value="${dt.export_price}" type="number"/>đ</td>
+                            <td><b><fmt:formatNumber value="${dt.export_quantity * dt.export_price}" type="number"/>đ</b></td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="total-amount">
+            Tổng giá trị xuất: <b>${exportTicket.getTotalAmount()}đ</b>
         </div>
     </div>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Mã vật tư</th>
-                <th>Tên vật tư</th>
-                <th>Số lượng xuất</th>
-                <th>Đơn giá xuất</th>
-                <th>Thành tiền</th>
-            </tr>
-        </thead>
-        <tbody>
-            <c:forEach var="dt" items="${details}">
-                <tr>
-                    <td>${dt.material.id}</td>
-                    <td>${dt.material.name}</td>
-                    <td>${dt.export_quantity}</td>
-                    <td><fmt:formatNumber value="${dt.export_price}" type="number"/>đ</td>
-                    <td><b><fmt:formatNumber value="${dt.export_quantity * dt.export_price}" type="number"/>đ</b></td>
-                </tr>
-            </c:forEach>
-        </tbody>
-    </table>
-
-    <div class="total-amount">
-        Tổng giá trị xuất: <b>${exportTicket.getTotalAmount()}đ</b>
-    </div>
-</div>
 
 </body>
 </html>

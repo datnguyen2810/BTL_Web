@@ -172,7 +172,7 @@ uri="http://www.springframework.org/tags/form" %>
 
                 <div class="form-group">
                     <label for="role">Vai trò (Role)</label>
-                    <form:select id="role" path="role.id" required="true">
+                    <form:select id="role" path="role.id" required="true" disabled="${userDB.role.id == 1 ? true : false}">
                         <form:option value="1">Admin</form:option>
                         <form:option value="2">User</form:option>
                     </form:select>

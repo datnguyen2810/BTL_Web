@@ -1,7 +1,8 @@
 package vn.xuandat.Warehouse_management.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +24,17 @@ public class InventoryReportController {
 
     @GetMapping("/admin/inventory-report")
     public String showInventoryReport(@RequestParam(name="keyword", required = false) String keyword, 
-                                    @RequestParam(name="categoryId", required = false) Long categoryId, Model model) {
-        List<InventoryDTO> report = this.materialService.getInventoryReport(keyword, categoryId);
-
+                                    @RequestParam(name="categoryId", required = false) Long categoryId, 
+                                    @RequestParam(name="page", defaultValue = "0") int page,
+                                    Model model) {
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<InventoryDTO> reportPage = this.materialService.getPagedInventoryReport(keyword, categoryId, pageable);
+        if (page < 0 || page >= reportPage.getTotalPages() && reportPage.getTotalPages() > 0) {
+            return "redirect:/admin/inventory-report?page=0";      
+        }
         // Xử lý logic gán trạng thái (Sắp hết hàng/Còn hàng)
-        for(InventoryDTO item : report){
+        for(InventoryDTO item : reportPage){
             long stock = item.getTotalImport() - item.getTotalExport();
             item.setStock(stock);
             if(stock == 0) item.setStatus("Hết hàng");
@@ -35,8 +42,12 @@ public class InventoryReportController {
             else item.setStatus("Còn hàng");
         }
 
-        model.addAttribute("inventoryReport", report);
+        model.addAttribute("inventoryReport", reportPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", reportPage.getTotalPages());
+    
         model.addAttribute("categories", this.categoryService.handleGetAllCategories());
+        model.addAttribute("selectedCategoryId", categoryId);
         return "admin/inventory-report";
     }
 

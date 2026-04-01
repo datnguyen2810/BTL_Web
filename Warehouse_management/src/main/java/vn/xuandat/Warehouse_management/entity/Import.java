@@ -4,6 +4,8 @@ package vn.xuandat.Warehouse_management.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +22,8 @@ public class Import {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true, nullable = false)
+    private String code;
     private LocalDateTime date;
     private double totalAmount;
 
@@ -36,7 +40,7 @@ public class Import {
     @JoinColumn(name = "user_id")
     private User userImport;
 
-    @OneToMany(mappedBy="importEntity")
+    @OneToMany(mappedBy="importEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ImportDetail> importDetails;
 
     
@@ -46,6 +50,14 @@ public class Import {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getDate() {
@@ -82,6 +94,5 @@ public class Import {
     public void setImportDetails(List<ImportDetail> importDetails) {
         this.importDetails = importDetails;
     }
-
     
 }

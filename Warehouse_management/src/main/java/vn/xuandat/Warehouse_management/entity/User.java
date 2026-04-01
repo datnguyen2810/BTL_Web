@@ -1,5 +1,6 @@
 package vn.xuandat.Warehouse_management.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -26,6 +27,7 @@ public class User {
     private String password;
     private String age;
     private String address;
+    private LocalDateTime deleted_at;
  
     public User() {
     }

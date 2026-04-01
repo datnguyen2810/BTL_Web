@@ -14,8 +14,6 @@ import vn.xuandat.Warehouse_management.entity.User;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserService userService;
-
-    // Inject UserService để sử dụng hàm tìm kiếm User theo Email
     public CustomUserDetailsService(UserService userService) {
         this.userService = userService;
     }
@@ -26,14 +24,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = this.userService.getUserByEmail(email);
 
         // 2. Nếu không tìm thấy, ném ra ngoại lệ để Spring Security xử lý (đẩy về trang login?error)
-        if (user == null) {
+        if (user == null || user.getDeleted_at() != null) {
             throw new UsernameNotFoundException("Không tìm thấy người dùng với email: " + email);
         }
 
         // 3. Xác định quyền dựa trên role_id từ database
-        String roleName = (user.getRole() != null && user.getRole().getId() == 1) 
-                      ? "ROLE_ADMIN" 
-                      : "ROLE_USER";
+        String roleName = (user.getRole() != null && user.getRole().getId() == 1) ? "ROLE_ADMIN" : "ROLE_USER";
 
         // 4. Chuyển đổi đối tượng User sang đối tượng UserDetails mà Spring Security hiểu được
         // Vì đang dùng NoOpPasswordEncoder, password ở đây sẽ là chuỗi thuần (VD: "123")

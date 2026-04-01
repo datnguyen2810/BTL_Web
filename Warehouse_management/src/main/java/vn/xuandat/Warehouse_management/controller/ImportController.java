@@ -5,12 +5,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 import vn.xuandat.Warehouse_management.entity.Import;
@@ -33,9 +37,20 @@ public class ImportController {
 
     @GetMapping("/admin/imports")
     public String getImports(@RequestParam(name="userId", required = false) Long userId,
-                            @RequestParam(name="importId", required = false) Long importId, Model model) {
-        List<Import> imports = this.importService.searchImports(userId, importId);
-        model.addAttribute("imports", imports);
+                            @RequestParam(name="importCode", required = false) String importCode, 
+                            @RequestParam(name="page", defaultValue="0") int page,
+                            Model model) {
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Import> importPage = this.importService.getPagedImport(userId, importCode, pageable);
+        if (page < 0 || page >= importPage.getTotalPages() && importPage.getTotalPages() > 0) {
+            return "redirect:/admin/imports?page=0";      
+        }
+        
+        model.addAttribute("imports", importPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", importPage.getTotalPages());
+
         model.addAttribute("users", this.userService.handleGetAllUsers());
         model.addAttribute("selectedUserId", userId);
         return "admin/import/show-imports";
@@ -44,16 +59,9 @@ public class ImportController {
     
     @GetMapping("/admin/imports/create")
     public String showCreateForm(HttpSession session, Model model) {
-        // 1. Luôn nạp lại danh sách vật tư để hiển thị trong <select>
+        // 1. Nạp lại danh sách vật tư để hiển thị trong <select>
         model.addAttribute("materials", this.materialService.handleGetAllMaterials());
 
-        // Quy trình hoạt động:
-        // Lần đầu người dùng truy cập /admin/imports/create:
-        // getAttribute() trả về null (chưa có dữ liệu)
-        // Code tạo một ArrayList mới
-        // Lưu nó vào session với setAttribute("tempImportList", tempList)
-        // Lần thứ 2, 3, ...:
-        // getAttribute() truy xuất danh sách đã lưu từ lần trước
         // 2. Quản lý danh sách tạm trong session
         List<ImportDetail> tempList = (List<ImportDetail>) session.getAttribute("tempImportList");
         if (tempList == null) {
@@ -82,14 +90,28 @@ public class ImportController {
         List<ImportDetail> tempList = (List<ImportDetail>) session.getAttribute("tempImportList");
         if (tempList == null) tempList = new ArrayList<>();
 
-        ImportDetail detail = new ImportDetail();
-        detail.setMaterial(materialService.handleGetMaterialById(materialId));
-        detail.setImport_quantity(quantity);
-        detail.setImport_price(price);
+        boolean isExist = false;
+        // Duyệt qua danh sách tạm để kiểm tra xem vật tư này đã có chưa
+        for (ImportDetail detail : tempList) {
+            if (detail.getMaterial().getId().equals(materialId)) {
+                // Nếu đã tồn tại, cộng dồn số lượng
+                detail.setImport_quantity(detail.getImport_quantity() + quantity);
+                
+                // Cập nhật đơn giá mới nhất 
+                detail.setImport_price(price);
+                isExist = true;
+                break;
+            }
+        }
 
-        tempList.add(detail);
-        session.setAttribute("tempImportList", tempList);
-
+        // Nếu chưa tồn tại trong danh sách thì mới thêm mới
+        if (!isExist) {
+            ImportDetail detail = new ImportDetail();
+            detail.setMaterial(materialService.handleGetMaterialById(materialId));
+            detail.setImport_quantity(quantity);
+            detail.setImport_price(price);
+            tempList.add(detail);
+        }
         return "redirect:/admin/imports/create";
     }
 
@@ -104,15 +126,30 @@ public class ImportController {
         return "redirect:/admin/imports/create";
     }
 
+    @GetMapping("/admin/imports/cancel")
+    public String cancel(HttpSession session) {
+        session.removeAttribute("tempImportList");
+        session.removeAttribute("importCode");
+        return "redirect:/admin/imports";
+    }
+
     // Lưu toàn bộ từ Session vào Database
     @PostMapping("/admin/imports/save-final")
-    public String saveFinalImport(HttpSession session) {
+    public String saveFinalImport(HttpSession session, 
+                                  @RequestParam String importCode, 
+                                  RedirectAttributes ra) {
+        if(importService.isCodeExists(importCode)){
+            ra.addFlashAttribute("error", "Mã phiếu '" + importCode + "' đã tồn tại trên hệ thống!");
+            // Lưu lại mã phiếu vào session để hiển thị lại trên input, tránh bắt user gõ lại
+            session.setAttribute("importCode", importCode); 
+            return "redirect:/admin/imports/create";
+        }
+
         List<ImportDetail> tempList = (List<ImportDetail>) session.getAttribute("tempImportList");
         
         if (tempList != null && !tempList.isEmpty()) {
             // Gọi service xử lý lưu vào 2 bảng Imports và Import_Details
-            // Nên lấy User đang đăng nhập từ Session để gán vào phiếu nhập
-            this.importService.handleSaveFinalImport(tempList);
+            this.importService.handleSaveFinalImport(tempList, importCode);
             
             // Xóa sạch danh sách tạm sau khi lưu thành công
             session.removeAttribute("tempImportList");
@@ -129,7 +166,7 @@ public class ImportController {
         
         // 2. Gửi dữ liệu sang JSP
         model.addAttribute("importTicket", importTicket);
-        // Danh sách chi tiết thường được mapping @OneToMany trong entity Import
+        // Danh sách chi tiết được mapping @OneToMany trong entity Import
         model.addAttribute("details", importTicket.getImportDetails()); 
         
         return "admin/import/detail-import";
@@ -138,11 +175,31 @@ public class ImportController {
 
     // Xóa phiếu nhập
     @GetMapping("/admin/imports/delete/{id}")
-    public String deleteImport(@PathVariable Long id) {
-        this.importService.handleDeleteImport(id);
+    public String deleteImport(@PathVariable Long id, RedirectAttributes ra) {
+        try {
+            this.importService.handleDeleteImport(id);
+            ra.addFlashAttribute("message", "Xóa phiếu nhập thành công và đã cập nhật lại kho!");
+        } catch (RuntimeException e) {
+            ra.addFlashAttribute("error", e.getMessage());
+        }
+
         return "redirect:/admin/imports";
     }
 
     
 
 }
+
+
+
+
+
+
+
+// Quy trình hoạt động:
+        // Lần đầu người dùng truy cập /admin/imports/create:
+        // getAttribute() trả về null (chưa có dữ liệu)
+        // Code tạo một ArrayList mới
+        // Lưu nó vào session với setAttribute("tempImportList", tempList)
+        // Lần thứ 2, 3, ...:
+        // getAttribute() truy xuất danh sách đã lưu từ lần trước

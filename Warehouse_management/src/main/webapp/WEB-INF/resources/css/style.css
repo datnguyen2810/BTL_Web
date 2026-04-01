@@ -91,3 +91,25 @@ td {
     color: #334155;
     font-size: 13px;
 }
+
+/* phân trang */
+.btn-page {
+    padding: 6px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #1e293b;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.btn-page:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.btn-page.active {
+    background-color: #2563eb; /* Màu xanh đồng bộ với Dashboard */
+    color: white;
+    border-color: #2563eb;
+}

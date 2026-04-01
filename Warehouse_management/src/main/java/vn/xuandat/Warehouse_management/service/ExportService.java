@@ -3,6 +3,8 @@ package vn.xuandat.Warehouse_management.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -26,15 +28,16 @@ public class ExportService {
         this.userService = userService;
     }
 
-    public List<Export> searchExports(Long userId, Long exportId) {
-        return this.exportRepository.searchExports(userId, exportId);
+    public Page<Export> getPagedExport(Long userId, String exportCode, Pageable pageable) {
+        return this.exportRepository.getPagedExport(userId, exportCode, pageable);
     }
 
     @Transactional
-    public void handleSaveFinalExport(List<ExportDetail> tempList) {
-        // 1. Tạo phiếu nhập mới (Bảng Imports)
+    public void handleSaveFinalExport(List<ExportDetail> tempList, String exportCode) {
+        // 1. Tạo phiếu xuất mới (Bảng Exports)
         Export exp = new Export();
         exp.setDate(LocalDateTime.now());
+        exp.setCode(exportCode);
 
         // Tính tổng tiền từ danh sách tạm
         double total = tempList.stream().mapToDouble(it -> it.getExport_price() * it.getExport_quantity()).sum();
@@ -48,7 +51,7 @@ public class ExportService {
 
         this.exportRepository.save(exp);
 
-        // 2. Lưu chi tiết (Bảng Import_Details)
+        // 2. Lưu chi tiết (Bảng Export_Details)
         for(ExportDetail detail : tempList){
             detail.setExportEntity(exp);
             this.exportDetailRepository.save(detail);
@@ -57,12 +60,16 @@ public class ExportService {
 
     @Transactional
     public void handleDeleteExport(Long exportId) {
-        this.exportDetailRepository.deleteByExportId(exportId); // Xóa chi tiết trước
-        this.exportRepository.deleteById(exportId); // Xóa phiếu xuất
+        // Cascade delete sẽ tự động xóa ExportDetail
+        this.exportRepository.deleteById(exportId);
     }
 
     public Export handleGetExportById(Long id) {
         return this.exportRepository.findById(id).orElse(null);
+    }
+
+    public boolean isCodeExists(String exportCode) {
+        return exportRepository.existsByCode(exportCode);
     }
     
 

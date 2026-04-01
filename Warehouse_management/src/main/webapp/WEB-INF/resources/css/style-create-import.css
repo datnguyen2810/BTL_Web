@@ -110,6 +110,19 @@
     font-size: 18px; 
 }
 
+/* Container bao bọc bảng */
+.table-responsive {
+    max-height: 350px;    /* Chiều cao tối đa bạn muốn */
+    overflow-y: auto;    /* Hiện thanh cuộn dọc khi dữ liệu vượt quá 400px */
+}
+
+/* Giữ tiêu đề bảng cố định khi cuộn xuống (Sticky Header) */
+.table-responsive table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
 /* table { 
     width: 100%; 
     border-collapse: collapse; 
@@ -133,19 +146,43 @@ td {
     text-align: center;
 } */
 
+/* Container bao quanh cả 2 nút */
+.btn-group-actions {
+    display: flex;         /* Kích hoạt Flexbox */
+    justify-content: flex-end; /* Đẩy tất cả sang bên phải */
+    align-items: center;   /* Căn giữa theo chiều dọc */
+    gap: 12px;            /* Khoảng cách giữa 2 nút */
+    margin-top: 20px;      /* Khoảng cách với bảng phía trên */
+}
+
 .btn-submit-all {
-    float: right;
+    /* float: right; <== XÓA DÒNG NÀY */
     padding: 12px 30px;
     background-color: var(--accent-green);
     color: white;
     border: none;
     border-radius: 8px;
     font-weight: 600;
-    margin-top: 20px;
     transition: 0.3s;
-    /* cursor: pointer; */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.btn-submit-all:hover { 
-    background-color: #059669; 
+/* Đảm bảo nút Hủy có cùng chiều cao với nút Lưu */
+.btn-cancel {
+    padding: 12px 22px; 
+    background-color: #f1f5f9;
+    color: #64748b;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+    border: 1px solid #e2e8f0;
+    height: 100%; /* Cho bằng chiều cao nút Lưu */
+    box-sizing: border-box;
 }

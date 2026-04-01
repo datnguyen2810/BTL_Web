@@ -1,5 +1,7 @@
 package vn.xuandat.Warehouse_management.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,5 +18,12 @@ public interface ImportDetailRepository extends JpaRepository<ImportDetail, Long
             where d.importEntity.id = :id
             """)
     public void deleteByImportId(@Param("id") Long id);
+
+    @Query("""
+            select d from ImportDetail d
+            where d.importEntity.id = :id
+            """)
+    public List<ImportDetail> findByImportId(@Param("id") Long id);
     
+    public boolean existsByMaterialId(Long id);
 }
