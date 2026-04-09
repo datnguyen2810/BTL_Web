@@ -29,7 +29,16 @@ public class ExportService {
     }
 
     public Page<Export> getPagedExport(Long userId, String exportCode, Pageable pageable) {
-        return this.exportRepository.getPagedExport(userId, exportCode, pageable);
+        if(exportCode != null && exportCode.trim().isEmpty()) {
+            exportCode = null;
+        }
+        Page<Export> exportPage = this.exportRepository.getPagedExport(userId, exportCode, pageable);
+        for (Export exp : exportPage.getContent()) {
+            // tính số lượng vật tư của từng phiếu
+            long count = exportDetailRepository.sumQuantityByExportId(exp.getId());
+            exp.setTotalItems(count);
+        }
+        return exportPage;
     }
 
     @Transactional

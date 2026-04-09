@@ -57,5 +57,11 @@ public class RecentActivityDTO {
         this.date = date;
     }
 
+    public String getDate2(){
+        String[] parts = date.split("/");
+        // return parts[2] + "-" + parts[1] + "-" + parts[0];
+        return String.format("%04d/%02d/%02d", Integer.parseInt(parts[2]), Integer.parseInt(parts[1]), Integer.parseInt(parts[0]));
+    }
+
     
 }

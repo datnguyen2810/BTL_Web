@@ -36,7 +36,8 @@ public class ExportController {
     }
 
     @GetMapping("/admin/exports")
-    public String getExports(@RequestParam(name="userId", required=false) Long userId, 
+    public String getExports(@RequestParam(required = false) String statType,
+                            @RequestParam(name="userId", required=false) Long userId, 
                             @RequestParam(name="exportCode", required=false) String exportCode, 
                             @RequestParam(name="page", defaultValue="0") int page,
                             Model model) {

@@ -82,6 +82,7 @@
                                 <a href="/admin/imports/${importItem.id}" class="detail-link">Chi tiết</a>
                                 <!-- <a href="/admin/imports/edit/${importItem.id}" class="edit-link">Sửa</a> -->
                                 <sec:authorize access="hasRole('ADMIN')">
+                                    <!-- <a href="/admin/imports/edit/${importItem.id}" class="edit-link">Sửa</a> -->
                                     <a href="/admin/imports/delete/${importItem.id}" class="delete-link" 
                                     onclick="return confirm('Cảnh báo: Xóa phiếu nhập sẽ làm thay đổi số lượng kho! Bạn chắc chắn chứ?')">
                                     Xóa</a>

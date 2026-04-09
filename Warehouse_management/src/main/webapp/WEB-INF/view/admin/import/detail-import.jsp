@@ -20,7 +20,7 @@
         td { padding: 12px; border-bottom: 1px solid #edf2f7; }
         .details-responsive {
             max-height: 300px;    /* Chiều cao tối đa bạn muốn */
-            overflow-y: auto;    /* Hiện thanh cuộn dọc khi dữ liệu vượt quá 400px */
+            overflow-y: auto;    /* Hiện thanh cuộn dọc khi dữ liệu vượt quá 300px */
         }
         /* Giữ tiêu đề bảng cố định khi cuộn xuống (Sticky Header) */
         .details-responsive table thead {

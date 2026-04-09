@@ -14,13 +14,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import vn.xuandat.Warehouse_management.entity.Category;
 import vn.xuandat.Warehouse_management.service.CategoryService;
+import vn.xuandat.Warehouse_management.service.MaterialService;
 
 
 @Controller
 public class CategoryController {
     private final CategoryService categoryService;
-    public CategoryController(CategoryService categoryService) {
+    private final MaterialService materialService;
+    public CategoryController(CategoryService categoryService, MaterialService materialService) {
         this.categoryService = categoryService;
+        this.materialService = materialService;
     }
     
     @GetMapping("/admin/categories")
@@ -39,17 +42,6 @@ public class CategoryController {
         model.addAttribute("currentPage", page); 
         model.addAttribute("totalPages", categoryPage.getTotalPages());
         return "admin/category/show-categories";
-    }
-
-    @GetMapping("/admin/categories/delete/{id}")
-    public String deleteCategory(@PathVariable Long id, RedirectAttributes ra) {
-        try {
-            this.categoryService.handleDeleteCategoryById(id);
-            ra.addFlashAttribute("message", "Xóa danh mục thành công!");
-        } catch (RuntimeException e) {
-            ra.addFlashAttribute("error", e.getMessage());
-        }
-        return "redirect:/admin/categories";
     }
 
     @GetMapping("/admin/categories/create")
@@ -78,4 +70,14 @@ public class CategoryController {
         return "redirect:/admin/categories";
     }
     
+    @GetMapping("/admin/categories/delete/{id}")
+    public String deleteCategory(@PathVariable Long id, RedirectAttributes ra) {
+        try {
+            this.categoryService.handleDeleteCategoryById(id);
+            ra.addFlashAttribute("message", "Xóa danh mục thành công!");
+        } catch (RuntimeException e) {
+            ra.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/admin/categories";
+    }
 }

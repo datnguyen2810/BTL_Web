@@ -36,6 +36,9 @@ public class ImportService {
     }
 
     public Page<Import> getPagedImport(Long userId, String importCode, Pageable pageable) {
+        if(importCode != null && importCode.trim().isEmpty()) {
+            importCode = null;
+        }
         return this.importRepository.getPagedImport(userId, importCode, pageable);
     }
 

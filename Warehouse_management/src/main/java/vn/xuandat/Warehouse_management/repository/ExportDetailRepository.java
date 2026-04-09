@@ -19,5 +19,12 @@ public interface  ExportDetailRepository extends JpaRepository<ExportDetail, Obj
     void deleteByExportId(@Param("exportId") Long exportId);
 
     boolean existsByMaterialId(Long id);
+
+    @Query("""
+            select coalesce(sum(d.export_quantity), 0)
+            from ExportDetail d
+            where d.exportEntity.id = :exportId
+            """)
+    public long sumQuantityByExportId(@Param("exportId") Long id);
     
 }

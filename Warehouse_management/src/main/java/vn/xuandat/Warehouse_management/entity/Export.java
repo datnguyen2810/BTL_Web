@@ -14,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Setter;
 
 @Entity
@@ -27,6 +28,9 @@ public class Export {
     private String code;
     private LocalDateTime date;
     private double totalAmount;
+
+    @Transient
+    private long totalItems;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -64,6 +68,15 @@ public class Export {
     public List<ExportDetail> getExportDetails() {
         return exportDetails;
     }
+
+    public long getTotalItems() {
+        return totalItems;
+    }
+
+    public void setTotalItems(long totalItems) {
+        this.totalItems = totalItems;
+    }
+    
 
 
 }

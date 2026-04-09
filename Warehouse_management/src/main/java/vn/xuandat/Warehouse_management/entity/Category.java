@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "categories")
@@ -17,6 +18,9 @@ public class Category {
     private Long id;
     private String name;
     private String description;
+
+    @Transient
+    private long materialCount;
 
     @OneToMany(mappedBy="category")
     private List<Material> materials;
@@ -55,5 +59,11 @@ public class Category {
         this.materials = materials;
     }
 
-    
+    public long getMaterialCount() {
+        return materialCount;
+    }
+
+    public void setMaterialCount(long materialCount) {
+        this.materialCount = materialCount;
+    }
 }

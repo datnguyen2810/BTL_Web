@@ -125,17 +125,17 @@ uri="http://www.springframework.org/tags/form" %>
         </div>
 
         <form action="/admin/categories/create" method="POST" modelAttribute="newCategory">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+
             <div class="form-group">
                 <label for="cat_name">Tên danh mục</label>
-                <input type="text" id="cat_name" name="name" placeholder="Ví dụ: Thiết bị điện tử..." required>
+                <input type="text" id="cat_name"  name="name"placeholder="Ví dụ: Thiết bị điện tử..." required>
             </div>
 
             <div class="form-group">
                 <label for="cat_desc">Mô tả chi tiết</label>
                 <textarea id="cat_desc" name="description" rows="4" placeholder="Mô tả ngắn gọn về danh mục..."></textarea path="description"></textarea>
             </div>
-
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             
             <div class="btn-group">
                 <button type="submit" class="btn-submit">Lưu danh mục</button>

@@ -24,7 +24,14 @@ public class CategoryService {
         if(keyword != null && keyword.trim().isEmpty()){
             keyword = null;
         }
-        return categoryRepository.searchCategories(keyword, pageable);
+        Page<Category> categoryPage = categoryRepository.searchCategories(keyword, pageable);
+        
+        // Duyệt qua từng danh mục để gán số lượng vật tư
+        for (Category cat : categoryPage.getContent()) {
+            long count = materialRepository.countByCategoryId(cat.getId()); 
+            cat.setMaterialCount(count);
+        }
+        return categoryPage;
     }
 
     public List<Category> handleGetAllCategories() {
@@ -46,6 +53,7 @@ public class CategoryService {
     public Category findCategoryById(Long id) {
         return this.categoryRepository.findById(id).orElse(null);
     }
+
 
 
 }

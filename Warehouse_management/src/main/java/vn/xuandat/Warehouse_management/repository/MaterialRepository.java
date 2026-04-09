@@ -67,5 +67,4 @@ public interface MaterialRepository extends JpaRepository<Material, Long> {
     long countLowStockMaterials();
 
 
-
 }

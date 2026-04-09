@@ -32,11 +32,6 @@
                 </div>
             </c:if>
             
-            <!-- <sec:authorize access="hasRole('ADMIN')">
-                <button class="btn-add" onclick="window.location.href='/admin/categories/create'">
-                    <i class="fas fa-plus"></i> Thêm danh mục mới
-                </button>
-            </sec:authorize> -->
             <div class="header-actions" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <%-- Nút thêm mới bên trái --%>
                 <sec:authorize access="hasRole('ADMIN')">
@@ -69,6 +64,7 @@
                         <th>Mã danh mục</th>
                         <th>Tên danh mục</th>
                         <th>Mô tả</th>
+                        <th>Số lượng vật tư</th>
                         <sec:authorize access="hasRole('ADMIN')">
                             <th>Thao tác</th>
                         </sec:authorize>
@@ -80,6 +76,7 @@
                             <td>${category.id}</td>
                             <td>${category.name}</td>
                             <td>${category.description}</td>
+                            <td>${category.materialCount}</td>
                             <sec:authorize access="hasRole('ADMIN')">
                                 <td class="action-links">
                                     <a href="/admin/categories/update/${category.id}" class="edit-link">Sửa</a>
